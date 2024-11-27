@@ -78,6 +78,7 @@ int main()
             for (float x = -10.0f; x <= 10.0f; x += 0.04f) {
                 /* float y = sinf(x); */
                 float y = amplitude * sinf(frequency * degrees_to_rad(x) + phase);
+                float yy = amplitude * cosf(frequency * degrees_to_rad(x) + phase);
 
                 char infor_y[300];
                 sprintf(infor_y, "y: %.2f\n", y);
@@ -85,7 +86,12 @@ int main()
 
                 int screen_x = WINDOW_WIDTH/2.0f + x * SCALE;
                 int screen_y = WINDOW_HEIGHT/2.0f - y * SCALE;
+
+                int screen_xx = WINDOW_WIDTH/2.0f + x * SCALE;
+                int screen_yy = WINDOW_HEIGHT/2.0f - yy * SCALE;
+                
                 DrawPixel(screen_x, screen_y, get_rainbow());
+                DrawPixel(screen_xx, screen_yy, get_rainbow());
             }
             char infor[200];
             sprintf(infor, 
