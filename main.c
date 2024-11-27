@@ -12,6 +12,18 @@ float degrees_to_rad(float x)
     return x * (PI / 180.0f);
 }
 
+float global_time;
+
+Color get_rainbow()
+{
+    const float r = sinf(global_time);
+    const float g = sinf(global_time + 0.33f * 2.0f * PI);
+    const float b = sinf(global_time + 0.66f * 2.0f * PI);
+
+    return (Color){(unsigned char)(255.0f * r * r), (unsigned char)(255.0f * g * g),
+                   (unsigned char)(255.0f * b * b), 255.0f};
+}
+
 int main()
 {
     printf("Hello, World\n");
@@ -28,6 +40,9 @@ int main()
          /* DrawLine(int startPosX, int startPosY, int endPosX, int endPosY, Color color); */
             DrawLine(WINDOW_WIDTH/2, 0, WINDOW_WIDTH/2, WINDOW_HEIGHT, RED);
             DrawLine(0, WINDOW_HEIGHT/2, WINDOW_WIDTH, WINDOW_HEIGHT/2, RED);
+
+            float delta_time = GetFrameTime();
+            global_time += delta_time;
 
             int start_y = WINDOW_HEIGHT/2;
             for (int i = -10; i <= 10; i++) {
@@ -60,12 +75,17 @@ int main()
             if (IsKeyDown(KEY_P)) phase += 0.1f;
             if (IsKeyDown(KEY_Q)) phase -= 0.1f;
 
-            for (float x = -10.0f; x <= 10.0f; x += 0.1f) {
+            for (float x = -10.0f; x <= 10.0f; x += 0.04f) {
                 /* float y = sinf(x); */
                 float y = amplitude * sinf(frequency * degrees_to_rad(x) + phase);
+
+                char infor_y[300];
+                sprintf(infor_y, "y: %.2f\n", y);
+                DrawText(infor_y, 10, 100, 20, BLUE);
+
                 int screen_x = WINDOW_WIDTH/2.0f + x * SCALE;
                 int screen_y = WINDOW_HEIGHT/2.0f - y * SCALE;
-                DrawPixel(screen_x, screen_y, BLUE);
+                DrawPixel(screen_x, screen_y, get_rainbow());
             }
             char infor[200];
             sprintf(infor, 
